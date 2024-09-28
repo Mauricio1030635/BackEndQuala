@@ -34,10 +34,8 @@ namespace Quala.Data.Configuration
 
             builder.Property(e => e.FechaCreacion)
                 .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-
-            
-            builder.HasCheckConstraint("CK_FechaCreacion", "FechaCreacion >= GETDATE()");
+                .HasDefaultValueSql("GETDATE()");            
+           
 
             builder.HasOne(e => e.NuevaMoneda)
                 .WithMany(m => m.NuevaEntidades)

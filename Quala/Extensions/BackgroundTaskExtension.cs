@@ -8,6 +8,7 @@ using Quala.Data;
 using Quala.Core.Models;
 using Quala.Core.Repository;
 using Quala.Service;
+using Quala.Services.Service;
 
 
 namespace Quala.Extensions
@@ -20,7 +21,8 @@ namespace Quala.Extensions
         {
             services.AddDbContext<AppDbContext>(option =>
             {
-                option.UseSqlServer(configuration.GetConnectionString("Sql"));
+                option.UseSqlServer(configuration.GetConnectionString("Sql"),
+                    x => x.MigrationsHistoryTable("__EFMigrationsHistory", "mms"));
             });
             services.Configure<JwtOptions>(configuration.GetSection("SettingsApi:JwtOptions"));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
@@ -28,6 +30,8 @@ namespace Quala.Extensions
 
             services.AddAutoMapper(typeof(MappingProfile));            
             services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+            services.AddScoped<IMonedaService, MonedaService>();
+            services.AddScoped<IEntidadService, EntidadService>();
 
             services.AddControllers();
 

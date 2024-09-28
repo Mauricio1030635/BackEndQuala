@@ -20,6 +20,7 @@ namespace Quala.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.HasDefaultSchema("mms");
             modelBuilder.ApplyConfiguration(new NuevaEntidadConfiguration());
             modelBuilder.ApplyConfiguration(new NuevaMonedaConfiguration());
         }
