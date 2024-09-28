@@ -28,7 +28,8 @@ namespace Quala.Extensions
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAutoMapper(typeof(MappingProfile));            
+            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             services.AddScoped<IMonedaService, MonedaService>();
             services.AddScoped<IEntidadService, EntidadService>();

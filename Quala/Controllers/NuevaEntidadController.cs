@@ -15,12 +15,12 @@ namespace Quala.Controllers
     [Authorize(Roles = "Admin")]
     public class NuevaEntidadController : ControllerBase
     {
-        private readonly IEntidadService _nuevaEntidadService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public NuevaEntidadController(IEntidadService nuevaEntidadService, IMapper mapper)
+        public NuevaEntidadController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _nuevaEntidadService = nuevaEntidadService;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace Quala.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var entidad = await _nuevaEntidadService.GetAllEntidadAsync();
+            var entidad = await _unitOfWork.Entidades.GetAllEntidadAsync();
             var entidadDtos = _mapper.Map<IEnumerable<NuevaEntidadDto>>(entidad);
             return Ok(entidadDtos);
         }
@@ -38,7 +38,7 @@ namespace Quala.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var entidad = await _nuevaEntidadService.GetEntidadAsync(id);
+            var entidad = await _unitOfWork.Entidades.GetEntidadAsync(id);
             if (entidad == null) return NotFound();
 
             var entidadDto = _mapper.Map<NuevaEntidadDto>(entidad);
@@ -49,7 +49,7 @@ namespace Quala.Controllers
         public async Task<IActionResult> Create([FromBody] NuevaEntidadCreateDto createDto)
         {
             var entidad = _mapper.Map<NuevaEntidad>(createDto);
-            var newEntidad = await _nuevaEntidadService.CreateAsync(entidad);
+            var newEntidad = await _unitOfWork.Entidades.CreateAsync(entidad);
             var entidadDto = _mapper.Map<NuevaEntidadDto>(newEntidad);
             return CreatedAtAction(nameof(GetById), new { id = entidadDto.Codigo }, entidadDto);
         }
@@ -58,7 +58,7 @@ namespace Quala.Controllers
         public async Task<IActionResult> Update([FromBody] NuevaEntidadUpdateDto updateDto)
         {
             var entidad = _mapper.Map<NuevaEntidad>(updateDto);
-            var updatedEntidad = await _nuevaEntidadService.UpdateAsync(entidad);
+            var updatedEntidad = await _unitOfWork.Entidades.UpdateAsync(entidad);
             var entidadDto = _mapper.Map<NuevaEntidadDto>(updatedEntidad);
             return Ok(entidadDto);
         }
@@ -66,7 +66,7 @@ namespace Quala.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _nuevaEntidadService.DeleteAsync(id);
+            var result = await _unitOfWork.Entidades.DeleteAsync(id);
             if (!result) return NotFound();
 
             return NoContent();
